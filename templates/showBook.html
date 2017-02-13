@@ -1,0 +1,22 @@
+
+{% extends "layout.html" %}
+{% block body %}
+<div class="responsive">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="img"><img src={{book.photo}} alt={{book.name}} width="350" height="470"></div>
+		</div>
+		<div class="col-sm-8">
+
+		    <h2 style="font-size: 40px; font-family:'Arial'">{{book.name}}</h2>
+
+		    <h5 style="font-size: 17px">By {{book.author}}</h5>
+			<h1 style="font-size: 35px; font-family:'Arial'; color:#cf2525">{{book.price}}$</h1>
+		    <p style="font-size: 17px;text-align: justify;"> {{book.description}}</p>
+			<form action="{{ url_for('order', book_id = book.id) }}" method="post" enctype=multipart/form-data>
+			     <input type="submit" value="Order"> 
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+
+{% extends "layout.html" %}
+{% block body %}
+<div class="jumbotron">
+	<form action="{{ url_for('addBook') }}" method="POST" enctype=multipart/form-data>
+		<h1>Add Book:</h1>
+		<div class="form-group">
+		    <label for="name">Name:</label>
+		    <input type="text" class="form-control" id="name" placeholder="Enter Name" name="name">
+		</div>
+		<div class="form-group">
+		    <label for="author">Author:</label>
+		    <input type="text" class="form-control" id="author" placeholder="Enter Author" name="author">
+	    </div>
+	    <div class="form-group">
+	        <label for="price">Price:</label>
+	        <input type="text" class="form-control" id="price" placeholder="Enter Price" name="price">
+	    </div>
+
+	        <label for="photo">Photo:</label>
+	        <input type="file" id="photo" placeholder="Enter A Photo" name="file">
+	    <br>
+	    <div class="form-group">
+	        <label for="description">Description:</label>
+	        <textarea name="description" class="form-control" id="description" placeholder="Enter A Description" rows="10" cols="60"></textarea>
+	    </div>
+		<input type="submit" value="Add A Book">
+	</form>
+	{% for message in get_flashed_messages() %}
+	{{ message }}
+	{% endfor %}
+</div>
+{% endblock %}

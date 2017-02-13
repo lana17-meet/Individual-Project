@@ -1,0 +1,23 @@
+
+{% extends "layout.html" %}
+{% block body %}
+{% if books==[]%}
+<p> There are currently no books in the catalog. </p>
+
+{% else %}
+{% for book in books %}
+
+<div class="responsive">
+  <div class="img">
+    <a href={{url_for('showBook', book_id = book.id)}}>
+      <img src={{book.photo}} alt={{book.name}} width="170" height="250">
+    </a>
+    <br>
+    <br>
+    <!-- <div class="desc">{{book.name}}</div> -->
+  </div>
+</div>
+{% endfor %}
+
+{% endif %}
+{% endblock %}

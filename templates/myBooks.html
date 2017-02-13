@@ -1,0 +1,43 @@
+
+{% extends "layout.html" %}
+{% block body %}
+
+{% if oBooks==[]%}
+<p> You haven't ordered any books yet. </p>
+
+{% else %}
+{% for book in oBooks %}
+<h1>Books You Ordered:</h1>
+<div class="responsive">
+  <div class="img">
+    <a href={{url_for('showBook', book_id = book.id)}}>
+      <img src={{book.photo}} alt={{book.name}} width="170" height="250">
+    </a>
+    <br>
+    <br>
+    <!-- <div class="desc">{{book.name}}</div> -->
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if aBooks==[]%}
+<p> You haven't added any books. </p>
+
+{% else %}
+{% for book in aBooks %}
+<h1>Books You Added:</h1>
+<div class="responsive">
+<div class="img">
+  <a href={{url_for('showBook', book_id = book.id)}}>
+    <img src={{book.photo}} alt={{book.name}} width="170" height="250">
+  </a>
+  <br>
+  <br>
+  
+</div>
+<div></div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

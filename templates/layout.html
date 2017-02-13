@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+
+            li {
+                float: left;
+                color: white;
+                text-align: center;
+                display: block;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+            }
+
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+
+            input[type=button], input[type=submit], input[type=reset] {
+                background-color: #59b3dc;
+                border: none;
+                color: white;
+                padding: 10px 32px;
+                text-decoration: none;
+                margin: 4px 2px;
+                cursor: pointer;
+            }
+
+            img {
+                border-radius: 4px;
+}
+            }
+        </style>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    </head>
+    <body>
+
+        <div>
+            <ul>
+              <li><a href="{{ url_for('HomePage') }}">Home</a></li>
+              <li><a href="{{ url_for('addBook') }}">Add Book</a></li>
+              <!-- <li><a href="{{ url_for('myBooks') }}">My Books</a></li> -->
+              <!-- {% if 'id' in login_session %} -->
+              <!-- {% endif %} -->
+              <li style="float:right"><a href="{{ url_for('logIn') }}">Log In</a></li>
+              <li style="float:right"><a href="{{ url_for('logout') }}">Log Out</a></li>
+              <li style="float:right">{% for message in get_flashed_messages() %}{{ message }}{% endfor %}</li>
+            </ul>
+        </div>
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
+
+    </body>
+</html> 
+
