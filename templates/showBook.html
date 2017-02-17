@@ -13,8 +13,16 @@
 		    <h5 style="font-size: 17px">By {{book.author}}</h5>
 			<h1 style="font-size: 35px; font-family:'Arial'; color:#cf2525">{{book.price}}$</h1>
 		    <p style="font-size: 17px;text-align: justify;"> {{book.description}}</p>
-			<form action="{{ url_for('order', book_id = book.id) }}" method="post" enctype=multipart/form-data>
-			     <input type="submit" value="Order"> 
+			<form action="{{ url_for('orderOrDelete', book_id = book.id) }}" method="post" enctype=multipart/form-data>
+				{% if not found %}
+					{% if not a %}
+				     <input type="submit" value="Order">
+				    {% else %}
+				     <input type="submit" value="Delete"> 
+				    {% endif %}
+			    {% else %}
+			     <input type="submit" value="Delete"> 
+			    {% endif %}
 			</form>
 		</div>
 	</div>

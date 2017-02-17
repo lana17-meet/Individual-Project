@@ -42,24 +42,35 @@ def HomePage():
 
 	return render_template('HomePage.html', books=final)
 
-@app.route('/myBooks')
+@app.route('/myBooks', methods=['GET', 'POST'])
 def myBooks():
-	if 'id' not in login_session:
-		flash("You need to be logged in")
-		return redirect(url_for('logIn'))
-	else:
-		books = session.query(Book).all()
-		ordered = session.query(Order).all()
-		orderedBooks = []
-		addedBooks = []
-		for book in books:
-			if book.user_id == login_session['id']:
-				addedBooks.append(book)
-		for order in ordered:
-			if order.user_id == login_session['id']:
-				b = session.query(Book).filter_by(book_id=order.book_id).one()
-				orderedBooks.append(b)
-		return render_template('myBooks.html', oBooks=orderedBooks, aBooks=addedBooks)
+	if request.method == 'GET' :
+		if 'id' not in login_session:
+			flash("You need to be logged in")
+			return redirect(url_for('logIn'))
+		else:
+			books = session.query(Book).all()
+			ordered = session.query(Order).all()
+			orderedBooks = []
+			addedBooks = []
+			for book in books:
+				if book.user_id == login_session['id']:
+					addedBooks.append(book)
+			for order in ordered:
+				if order.user_id == login_session['id']:
+					b = session.query(Book).filter_by(id=order.book_id).one()
+					orderedBooks.append(b)
+			return render_template('myBooks.html', oBooks=orderedBooks, aBooks=addedBooks)
+	# else:
+	# 	books = session.query(Book).all()
+	# 	for book in books:
+	# 		buttonName = "delete" + str(book.id)
+	# 		if buttonName in request.POST:
+	# 			for order in ordered:
+	# 		o = order.book_id
+	# 		if d==o:
+	# 			session.delete(book)
+	# 			session.commit()
 
 @app.route('/logIn', methods = ['GET','POST'])
 def logIn():
@@ -152,19 +163,49 @@ def logout():
 @app.route("/showBook/<int:book_id>")
 def showBook(book_id):
 		book = session.query(Book).filter_by(id=book_id).one()
-		return render_template('showBook.html', book=book)
+		ordered = session.query(Order).all()
+		a = False
+		found = False
+		if 'id' not in login_session:
+			return render_template('showBook.html', book=book, found=found, a=a)
+		if book.user_id == login_session['id']:
+			a = True
+		for order in ordered:
+				if order.book_id == book_id:
+					found = True
+		return render_template('showBook.html', book=book, found=found, a=a)
 
-@app.route("/showBook/<int:book_id>/order", methods = ['POST'])
-def order(book_id):
+@app.route("/showBook/<int:book_id>/orderOrDelete", methods = ['POST'])
+def orderOrDelete(book_id):
 	if 'id' not in login_session:
 		flash("You need to be logged in")
 		return redirect(url_for('logIn'))
 	b = session.query(Book).filter_by(id=book_id).one()
-	order = Order(user_id=login_session['id'], book_id=book_id, total_price=b.price)
-	session.add(order)
-	session.commit()
-	flash('This book was ordered successfuly')
-	return redirect(url_for('HomePage'))
+	if b.user_id != login_session['id']:
+		ordered = session.query(Order).all()
+		found = False
+		for order in ordered:
+				if order.book_id == book_id:
+					found = True
+		if not found :
+			order = Order(user_id=login_session['id'], book_id=book_id, total_price=b.price)
+			session.add(order)
+			session.commit()
+			flash('This book was ordered successfuly')
+			return redirect(url_for('HomePage'))
+		else:
+			order = session.query(Order).filter_by(book_id=book_id).one()
+			session.delete(order)
+			session.commit()
+			flash('Your order was canceled')
+			return redirect(url_for('HomePage'))
+	else:
+		session.delete(b)
+		session.commit()
+		flash('This book was deleted successfuly')
+		return redirect(url_for('HomePage'))
+
+
 
 
 @app.route('/signUp', methods = ['GET','POST'])
@@ -191,6 +232,6 @@ def signUp():
         return redirect(url_for('logIn'))
 
 if __name__=='__main__':
-	app.run()
+	app.run(debug=True)
 
 
