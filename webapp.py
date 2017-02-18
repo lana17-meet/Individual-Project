@@ -109,29 +109,36 @@ def addBook():
 			author = request.form["author"]
 			price = request.form["price"]
 			description= request.form["description"]
+			pic = request.form["pic"]
 			if name is None or author is None or price is None or 'file' not in request.files:
 				flash('There are missing arguments')
 				return redirect(url_for('addBook'))
-			file = request.files['file']
-			# if file.filename=='':
-			# 	flash('No file selected')
-		    #	return redirect(url_for('addBook'))
-			flash(file.filename)
-			if file and allowed_file(file.filename):
-
-				book = Book(name = name, author = author, price = price, description = description, user_id = login_session['id'])
-				session.add(book)
-				session.commit()
-				filename = str(book.id) + "_" + secure_filename(file.filename)
-				file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-				book.set_photo(filename)
+			if pic is None:
+				file = request.files['file']
+				if file.filename=='':
+				 	flash('No file selected')
+			    	return redirect(url_for('addBook'))
+				if file and allowed_file(file.filename):
+					book = Book(name = name, author = author, price = price, description = description, user_id = login_session['id'])
+					session.add(book)
+					session.commit()
+					filename = str(book.id) + "_book"
+					file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+					book.set_photo(filename)
+					session.add(book)
+					session.commit()
+					flash("Book Added Successfuly!")
+					return redirect(url_for('HomePage'))
+				else:
+					flash("Please upload either a .jpg, .jpeg, .png, or .gif file.")
+					return redirect(url_for('addBook'))
+			else:
+				book = Book(name = name, author = author, price = price, description = description, user_id = login_session['id'], photo=pic)
 				session.add(book)
 				session.commit()
 				flash("Book Added Successfuly!")
 				return redirect(url_for('HomePage'))
-			else:
-				flash("Please upload either a .jpg, .jpeg, .png, or .gif file.")
-				return redirect(url_for('addBook'))
+					
 
 
 @app.route('/logout')
